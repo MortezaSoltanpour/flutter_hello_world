@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/models/currency.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 
 void main() {
   runApp(MyApp());
@@ -10,6 +12,28 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
 
   List<Currency> currency = [];
+
+  getResponse() {
+    String url =
+        'https://sasansafari.com/flutter/api.php?access_key=flutter123456';
+    http.get(Uri.parse(url)).then((response) {
+      if (response.statusCode == 200) {
+        List jsonResponse = convert.jsonDecode(response.body);
+
+        jsonResponse.map((item) {
+          currency.add(
+            Currency(
+              id: item["id"],
+              title: item["title"],
+              changes: item["changes"],
+              price: item["price"],
+              status: item["status"],
+            ),
+          );
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -236,9 +260,9 @@ class MyTable extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Index", style: TextStyle(color: Colors.white)),
+            Text("Currency", style: TextStyle(color: Colors.white)),
             Text("Price", style: TextStyle(color: Colors.white)),
-            Text("Date", style: TextStyle(color: Colors.white)),
+            Text("Change", style: TextStyle(color: Colors.white)),
           ],
         ),
       ),
