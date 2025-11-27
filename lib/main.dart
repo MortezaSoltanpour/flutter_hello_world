@@ -109,7 +109,7 @@ class MyApp extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                          child: Text("Last updated: 12:45 PM"),
+                          child: Text("Last updated: ${_getTime()}"),
                         ),
                       ],
                     ),
@@ -122,6 +122,10 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+}
+
+String _getTime() {
+  return "${DateTime.now().hour}:${DateTime.now().minute.toString().padLeft(2, '0')}";
 }
 
 void _showSnackMessage(BuildContext context, String message) {
