@@ -263,7 +263,14 @@ class MyTableRow extends StatelessWidget {
               children: [
                 Text(currencyItem.title),
                 Text(currencyItem.price),
-                Text(currencyItem.changes),
+                Text(
+                  currencyItem.changes,
+                  style: TextStyle(
+                    color: currencyItem.status == "p"
+                        ? Colors.green
+                        : Colors.red,
+                  ),
+                ),
               ],
             ),
           ),
