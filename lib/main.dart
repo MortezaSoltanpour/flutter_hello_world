@@ -8,28 +8,57 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   List<Currency> currency = [];
+  String lastUpdated = "";
+
+  @override
+  void initState() {
+    super.initState();
+    getResponse();
+    lastUpdated = _getTime(); // initial time
+  }
+
+  String _getTime() {
+    return "${DateTime.now().hour}:${DateTime.now().minute.toString().padLeft(2, '0')}";
+  }
+
+  void _refreshTime() {
+    setState(() {
+      lastUpdated = _getTime();
+    });
+    print(lastUpdated);
+  }
 
   getResponse() {
+    if (currency.isNotEmpty) {
+      return;
+    }
+
     String url =
         'https://sasansafari.com/flutter/api.php?access_key=flutter123456';
     http.get(Uri.parse(url)).then((response) {
+      print(response.statusCode);
       if (response.statusCode == 200) {
         List jsonResponse = convert.jsonDecode(response.body);
-
-        jsonResponse.map((item) {
-          currency.add(
-            Currency(
+        print(jsonResponse);
+        setState(() {
+          currency = jsonResponse.map((item) {
+            return Currency(
               id: item["id"],
               title: item["title"],
               changes: item["changes"],
               price: item["price"],
               status: item["status"],
-            ),
-          );
+            );
+          }).toList();
         });
       }
     });
@@ -37,7 +66,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    currency = _addSampleData();
+    getResponse();
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -128,6 +157,7 @@ class MyApp extends StatelessWidget {
                           ),
                           onPressed: () {
                             _showSnackMessage(context, "Data refreshed!");
+                            _refreshTime();
                           },
                           child: Row(
                             children: [
@@ -139,7 +169,7 @@ class MyApp extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                          child: Text("Last updated: ${_getTime()}"),
+                          child: Text("Last updated: ${lastUpdated}"),
                         ),
                       ],
                     ),
@@ -152,71 +182,6 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
-}
-
-List<Currency> _addSampleData() {
-  List<Currency> new_currency = [];
-
-  new_currency.add(
-    Currency(
-      id: "1",
-      title: "USD",
-      changes: "+1.0",
-      price: "100.0",
-      status: "p",
-    ),
-  );
-  new_currency.add(
-    Currency(
-      id: "2",
-      title: "Euro",
-      changes: "-2.0",
-      price: "200.0",
-      status: "p",
-    ),
-  );
-  new_currency.add(
-    Currency(
-      id: "3",
-      title: "CAD",
-      changes: "+1.2",
-      price: "25.0",
-      status: "p",
-    ),
-  );
-  new_currency.add(
-    Currency(
-      id: "4",
-      title: "JWU",
-      changes: "+9.0",
-      price: "54.0",
-      status: "p",
-    ),
-  );
-  new_currency.add(
-    Currency(
-      id: "5",
-      title: "LAO",
-      changes: "-1.3",
-      price: "123.0",
-      status: "p",
-    ),
-  );
-  new_currency.add(
-    Currency(
-      id: "6",
-      title: "JDU",
-      changes: "+1.4",
-      price: "980.0",
-      status: "p",
-    ),
-  );
-
-  return new_currency;
-}
-
-String _getTime() {
-  return "${DateTime.now().hour}:${DateTime.now().minute.toString().padLeft(2, '0')}";
 }
 
 void _showSnackMessage(BuildContext context, String message) {
