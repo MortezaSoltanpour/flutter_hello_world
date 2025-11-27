@@ -37,6 +37,10 @@ class _MyAppState extends State<MyApp> {
     print(lastUpdated);
   }
 
+  clearList() {
+    currency.clear();
+  }
+
   getResponse() {
     if (currency.isNotEmpty) {
       return;
@@ -45,7 +49,6 @@ class _MyAppState extends State<MyApp> {
     String url =
         'https://sasansafari.com/flutter/api.php?access_key=flutter123456';
     http.get(Uri.parse(url)).then((response) {
-      print(response.statusCode);
       if (response.statusCode == 200) {
         List jsonResponse = convert.jsonDecode(response.body);
         print(jsonResponse);
@@ -60,6 +63,8 @@ class _MyAppState extends State<MyApp> {
             );
           }).toList();
         });
+        _showSnackMessage(context, "Data refreshed!");
+        _refreshTime();
       }
     });
   }
@@ -156,8 +161,8 @@ class _MyAppState extends State<MyApp> {
                             ),
                           ),
                           onPressed: () {
-                            _showSnackMessage(context, "Data refreshed!");
-                            _refreshTime();
+                            clearList();
+                            getResponse();
                           },
                           child: Row(
                             children: [
