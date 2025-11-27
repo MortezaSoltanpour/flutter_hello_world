@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/models/currency.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
@@ -6,10 +7,14 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  List<Currency> currency = [];
 
   @override
   Widget build(BuildContext context) {
+    currency = _addSampleData();
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true),
@@ -56,8 +61,9 @@ class MyApp extends StatelessWidget {
                     child: ListView.separated(
                       physics: BouncingScrollPhysics(),
 
-                      itemBuilder: (context, index) => MyTableRow(),
-                      itemCount: 20,
+                      itemBuilder: (context, index) =>
+                          MyTableRow(currency[index]),
+                      itemCount: currency.length,
                       separatorBuilder: (BuildContext context, int index) {
                         if (index % 7 == 0 && index > 0) {
                           debugPrint("Row is going!");
@@ -124,6 +130,67 @@ class MyApp extends StatelessWidget {
   }
 }
 
+List<Currency> _addSampleData() {
+  List<Currency> new_currency = [];
+
+  new_currency.add(
+    Currency(
+      id: "1",
+      title: "USD",
+      changes: "+1.0",
+      price: "100.0",
+      status: "p",
+    ),
+  );
+  new_currency.add(
+    Currency(
+      id: "2",
+      title: "Euro",
+      changes: "-2.0",
+      price: "200.0",
+      status: "p",
+    ),
+  );
+  new_currency.add(
+    Currency(
+      id: "3",
+      title: "CAD",
+      changes: "+1.2",
+      price: "25.0",
+      status: "p",
+    ),
+  );
+  new_currency.add(
+    Currency(
+      id: "4",
+      title: "JWU",
+      changes: "+9.0",
+      price: "54.0",
+      status: "p",
+    ),
+  );
+  new_currency.add(
+    Currency(
+      id: "5",
+      title: "LAO",
+      changes: "-1.3",
+      price: "123.0",
+      status: "p",
+    ),
+  );
+  new_currency.add(
+    Currency(
+      id: "6",
+      title: "JDU",
+      changes: "+1.4",
+      price: "980.0",
+      status: "p",
+    ),
+  );
+
+  return new_currency;
+}
+
 String _getTime() {
   return "${DateTime.now().hour}:${DateTime.now().minute.toString().padLeft(2, '0')}";
 }
@@ -180,7 +247,8 @@ class MyTable extends StatelessWidget {
 }
 
 class MyTableRow extends StatelessWidget {
-  const MyTableRow({super.key});
+  final Currency currencyItem;
+  MyTableRow(this.currencyItem, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +266,11 @@ class MyTableRow extends StatelessWidget {
             padding: EdgeInsetsGeometry.fromLTRB(10, 0, 10, 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Text("Index2"), Text("Price"), Text("Date")],
+              children: [
+                Text(currencyItem.title),
+                Text(currencyItem.price),
+                Text(currencyItem.changes),
+              ],
             ),
           ),
         ),
