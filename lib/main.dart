@@ -3,6 +3,7 @@ import 'package:flutter_application_1/models/currency.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
+import 'dart:developer' as developer;
 
 void main() {
   runApp(MyApp());
@@ -50,7 +51,7 @@ class _MyAppState extends State<MyApp> {
       statusMessage = "Getting data...";
     });
     print("Calling api");
-
+    developer.log("Calling api", name: 'my.app.category');
     String url =
         'https://sasansafari.com/flutter/api.php?access_key=flutter123456';
 
