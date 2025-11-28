@@ -177,6 +177,8 @@ class _MyAppState extends State<MyApp> {
                             ],
                           ),
                         ),
+                        if (statusMessage == "Getting data...")
+                          CircularProgressIndicator(color: Colors.pink),
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                           child: Text(statusMessage),
