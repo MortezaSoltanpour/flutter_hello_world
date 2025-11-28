@@ -45,35 +45,32 @@ class _MyAppState extends State<MyApp> {
     currency.clear();
   }
 
-  getResponse() {
-    // if (currency.isNotEmpty) {
-    //   return;
-    // }
+  Future getResponse() async {
     setState(() {
-      statusMessage = "Getting data..."; // Show while API is calling
+      statusMessage = "Getting data...";
     });
     print("Calling api");
 
     String url =
         'https://sasansafari.com/flutter/api.php?access_key=flutter123456';
-    http.get(Uri.parse(url)).then((response) {
-      if (response.statusCode == 200) {
-        List jsonResponse = convert.jsonDecode(response.body);
-        setState(() {
-          currency = jsonResponse.map((item) {
-            return Currency(
-              id: item["id"],
-              title: item["title"],
-              changes: item["changes"],
-              price: item["price"],
-              status: item["status"],
-            );
-          }).toList();
-        });
-        _showSnackMessage(context, "Data refreshed!");
-        _refreshTime();
-      }
-    });
+
+    var response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      List jsonResponse = convert.jsonDecode(response.body);
+      setState(() {
+        currency = jsonResponse.map((item) {
+          return Currency(
+            id: item["id"],
+            title: item["title"],
+            changes: item["changes"],
+            price: item["price"],
+            status: item["status"],
+          );
+        }).toList();
+      });
+      _showSnackMessage(context, "Data refreshed!");
+      _refreshTime();
+    }
   }
 
   @override
