@@ -18,10 +18,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   List<Currency> currency = [];
   String lastUpdated = "";
-
+  String statusMessage = "";
   @override
   void initState() {
     super.initState();
+
     getResponse();
     lastUpdated = _getTime(); // initial time
   }
@@ -33,8 +34,11 @@ class _MyAppState extends State<MyApp> {
   void _refreshTime() {
     setState(() {
       lastUpdated = _getTime();
+      final now = DateTime.now();
+      final formattedTime =
+          "${now.hour}:${now.minute.toString().padLeft(2, '0')}";
+      statusMessage = "Latest update: $formattedTime";
     });
-    print(lastUpdated);
   }
 
   clearList() {
@@ -42,16 +46,19 @@ class _MyAppState extends State<MyApp> {
   }
 
   getResponse() {
-    if (currency.isNotEmpty) {
-      return;
-    }
+    // if (currency.isNotEmpty) {
+    //   return;
+    // }
+    setState(() {
+      statusMessage = "Getting data..."; // Show while API is calling
+    });
+    print("Calling api");
 
     String url =
         'https://sasansafari.com/flutter/api.php?access_key=flutter123456';
     http.get(Uri.parse(url)).then((response) {
       if (response.statusCode == 200) {
         List jsonResponse = convert.jsonDecode(response.body);
-        print(jsonResponse);
         setState(() {
           currency = jsonResponse.map((item) {
             return Currency(
@@ -71,7 +78,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    getResponse();
+    // getResponse();
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -174,7 +181,7 @@ class _MyAppState extends State<MyApp> {
                         ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                          child: Text("Last updated: ${lastUpdated}"),
+                          child: Text(statusMessage),
                         ),
                       ],
                     ),
