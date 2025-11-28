@@ -117,7 +117,10 @@ class _MyAppState extends State<MyApp> {
                     "Lorem ipsume Lorem ipsume Lorem ipsume Lorem ipsume Lorem ipsume Lorem ipsume Lorem ipsume Lorem ipsume Lorem ipsume Lorem ipsume Lorem ipsume Lorem ipsume Lorem ipsume Lorem ipsume Lorem ipsume Lorem ipsume Lorem ipsume Lorem ipsume ",
                   ),
                   MyTable(),
-
+                  if (statusMessage == "Getting data...")
+                    Center(
+                      child: CircularProgressIndicator(color: Colors.pink),
+                    ),
                   SizedBox(
                     width: double.infinity,
                     height: 400,
