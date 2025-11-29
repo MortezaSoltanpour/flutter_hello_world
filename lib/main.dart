@@ -123,7 +123,7 @@ class _MyAppState extends State<MyApp> {
                     ),
                   SizedBox(
                     width: double.infinity,
-                    height: 400,
+                    height: MediaQuery.of(context).size.height * 0.5,
                     child: ListView.separated(
                       physics: BouncingScrollPhysics(),
 
